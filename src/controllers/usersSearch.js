@@ -17,10 +17,16 @@ export async function searchUser(req, res) {
 
   if (tokenActive.rows.length === 0) return res.sendStatus(401);
 
-  const findUser = await db.query(
-    `SELECT * FROM users WHERE username = $1`,
-    username
-  );
+  try {
+    const findUser = await db.query(
+      `SELECT * FROM users WHERE username = $1`,
+      username
+    );
 
-  if (findUser.rows.length === 0) return res.sendStatus(404);
+    if (findUser.rows.length === 0) return res.sendStatus(404);
+
+    return res.send(findUser.rows[0]);
+  } catch (error) {
+    return res.send(error);
+  }
 }
