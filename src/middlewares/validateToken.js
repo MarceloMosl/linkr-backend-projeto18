@@ -1,4 +1,4 @@
-import { db } from "../configs/database.connection.js";
+import { db } from "../config/database.js";
 
 export async function validateToken(req, res, next) {
 	const { authorization } = req.headers;
