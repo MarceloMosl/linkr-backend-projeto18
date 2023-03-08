@@ -1,8 +1,11 @@
 import { Router } from "express";
 import { editPost } from "../controllers/posts.js";
+import { validateToken } from "../middlewares/validateToken.js";
 
-const searchUserRoute = Router();
 
-searchUserRoute.post("/searchUser", searchUser);
+const postsRoute = Router();
 
-export default searchUserRoute;
+postsRoute.post("/editPost",validateToken, editPost);
+
+
+export default postsRoute;
