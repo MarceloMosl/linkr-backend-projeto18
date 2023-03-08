@@ -28,7 +28,27 @@ export async function editPost(req, res) {
     }
 }
 
+export async function deletePost(req, res) {
+    const { id } = req.params;
+	const currentSession = res.locals.session;
+    const user = currentSession.rows[0].user_id;
 
+    try{
+
+        const chosenPost = await db.query(
+            `SELECT * FROM posts WHERE "id" =$1`,
+            [id]
+        );
+        if (chosenPost.rowCount == 0) return res.status(404).send("Id does not exist");
+
+        if (chosenPost.rows[0].user_id !== user) return res.status(401).send("Id does not belong to this user");
+
+		await db.query (`DELETE FROM posts WHERE id =$1`,[id])
+
+    }catch(err){
+        return res.status(500).send(err);
+    }
+}
 
 
 
