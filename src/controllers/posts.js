@@ -18,10 +18,11 @@ export async function editPost(req, res) {
 
     if (chosenPost.rows[0].user_id !== user) return res.status(401).send("Id does not belong to this user");
 
-    await db.query(
-		`UPDATE posts SET headline=$1 WHERE id=$2`,
-		[headline, id]
-	);
+    const refactoredPost = await db.query(
+        `UPDATE posts SET headline=$1 WHERE id=$2 RETURNING *`,
+        [headline, id]
+    );
+    return res.status(200).send(refactoredPost.rows[0].headline);
 
     }catch(err){
         return res.status(500).send(err);
@@ -45,6 +46,7 @@ export async function deletePost(req, res) {
 
 		await db.query (`DELETE FROM posts WHERE id =$1`,[id])
 
+        return res.status(204).send("Ok");
     }catch(err){
         return res.status(500).send(err);
     }

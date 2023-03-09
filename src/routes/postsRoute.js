@@ -5,8 +5,8 @@ import { validateToken } from "../middlewares/validateToken.js";
 
 const postsRoute = Router();
 
-postsRoute.post("/posts/edit",validateToken, editPost);
-postsRoute.post("/posts/delete",validateToken, deletePost);
+postsRoute.patch("/posts/:id",validateToken, editPost);
+postsRoute.delete("/posts/:id",validateToken, deletePost);
 
 
 export default postsRoute;

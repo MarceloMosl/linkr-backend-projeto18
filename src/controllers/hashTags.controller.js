@@ -1,4 +1,4 @@
-import { getHashTagsRepository } from "../repositories/hashTagsRepository"
+import { getHashTagsRepository } from "../repositories/hashTagsRepository.js"
 
 export async function showHashTags(req,res) {
     const hashTagsList = getHashTagsRepository()
