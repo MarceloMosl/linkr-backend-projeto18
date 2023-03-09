@@ -30,7 +30,6 @@ async function signUp(req, res) {
 async function login(req, res) {
   const { email, password } = req.body;
   const token = uuidV4();
-  console.log(req.body);
 
   try {
     const existe = await db.query(`SELECT * FROM users WHERE email = $1;`, [

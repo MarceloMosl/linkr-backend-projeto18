@@ -10,7 +10,7 @@ export async function getUserPosts(req, res) {
 
     const findUser = await db.query(`select * from users WHERE id = $1`, [id]);
 
-    if (findPosts.rows.length === 0) return res.sendStatus(404);
+    if (findUser.rows.length === 0) return res.sendStatus(404);
 
     return res.send([findPosts.rows, findUser.rows]);
   } catch (error) {
