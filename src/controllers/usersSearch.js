@@ -17,3 +17,13 @@ export async function getUserPosts(req, res) {
     return res.send(error);
   }
 }
+
+export async function postUsers(req, res) {
+  const { username } = req.body;
+
+  const promise = await db.query(`SELECT * FROM users WHERE username LIKE $1`, [
+    username,
+  ]);
+
+  res.send(promise.rows);
+}
