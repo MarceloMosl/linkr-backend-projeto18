@@ -35,6 +35,11 @@ GROUP BY
   u.id;`
     );
 
+    if (promise.rows.length === 0) {
+      const user = await db.query("SELECT * FROM users WHERE id = $1", [id]);
+      return res.send(user.rows);
+    }
+
     return res.send(promise.rows);
   } catch (error) {
     return res.send(error);
