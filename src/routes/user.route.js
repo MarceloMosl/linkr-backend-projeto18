@@ -3,7 +3,6 @@ import express from "express";
 import { login, signUp } from "../controllers/log.js";
 import validateUser from "../middlewares/validateUser.js";
 import validateLogin from "../middlewares/validateLogin.js";
-import { db } from "../config/database.js";
 
 import { loginSchema, signSchema } from "../schemas/loginSchema.js";
 
