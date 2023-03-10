@@ -4,15 +4,38 @@ export async function getUserPosts(req, res) {
   const { id } = req.params;
 
   try {
-    const findPosts = await db.query(`select * from posts WHERE user_id = $1`, [
-      id,
-    ]);
+    const userId = res.locals.session;
 
-    const findUser = await db.query(`select * from users WHERE id = $1`, [id]);
+    const promise = await db.query(
+      `SELECT
+  p.id,
+  p.user_id,
+  u.username,
+  u.user_url,
+  p.headline,
+  array_agg(z.name) AS hashtags_name,
+  array_agg(h.id) AS hashtags_id,
+  p.post_url,
+  COUNT(l.id) AS total_likes,
+  EXISTS(SELECT 1 FROM likes WHERE post_id = p.id AND user_id = ${userId.rows[0].user_id}) AS usuario_liked
+FROM
+  posts p
+INNER JOIN
+  users u ON p.user_id = u.id
+LEFT JOIN
+  likes l ON p.id = l.post_id
+LEFT JOIN
+  posts_hastags h ON p.id = h.post_id
+LEFT JOIN
+  hastags z ON z.id = h.hastag_id
+WHERE 
+  u.id = ${id}
+GROUP BY
+  p.id,
+  u.id;`
+    );
 
-    if (findUser.rows.length === 0) return res.sendStatus(404);
-
-    return res.send([findPosts.rows, findUser.rows]);
+    return res.send(promise.rows);
   } catch (error) {
     return res.send(error);
   }
