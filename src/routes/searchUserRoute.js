@@ -1,8 +1,10 @@
 import { Router } from "express";
-import { searchUser } from "../controllers/usersSearch.js";
+import { getUserPosts, postUsers } from "../controllers/usersSearch.js";
+import { validateToken } from "../middlewares/validateToken.js";
 
 const searchUserRoute = Router();
 
-searchUserRoute.post("/searchUser", searchUser);
+searchUserRoute.get("/user/:id", validateToken, getUserPosts);
+searchUserRoute.post("/srcuser", postUsers);
 
 export default searchUserRoute;
