@@ -21,9 +21,9 @@ async function signUp(req, res) {
       [username, email, hashPassword, user_url]
     );
 
-    res.sendStatus(201);
+    return res.sendStatus(201);
   } catch (error) {
-    res.status(500).send(error.message);
+    return res.status(500).send(error.message);
   }
 }
 
