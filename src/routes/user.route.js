@@ -1,18 +1,15 @@
 import express from "express";
 
-import {login, signUp} from "../controllers/log.js";
+import { login, signUp } from "../controllers/log.js";
 import validateUser from "../middlewares/validateUser.js";
 import validateLogin from "../middlewares/validateLogin.js";
+import { db } from "../config/database.js";
 
-
-
-import {loginSchema, signSchema}  from "../schemas/loginSchema.js";
+import { loginSchema, signSchema } from "../schemas/loginSchema.js";
 
 const userRoute = express.Router();
 
-userRoute.post('/sign-up', validateUser(signSchema), signUp); 
-userRoute.post('/', validateLogin (loginSchema), login); 
-
-
+userRoute.post("/sign-up", validateUser(signSchema), signUp);
+userRoute.post("/", validateLogin(loginSchema), login);
 
 export default userRoute;
