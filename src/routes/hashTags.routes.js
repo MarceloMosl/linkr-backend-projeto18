@@ -6,6 +6,7 @@ import { showHashTags } from "../controllers/hashTags.controller.js";
 const hashTagsRouter = Router()
 
 hashTagsRouter.get("/hashtags",showHashTags)
+hashTagsRouter.get("hashtag/:hashtag")
 
 
 export default hashTagsRouter
