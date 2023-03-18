@@ -1,5 +1,13 @@
 import { db } from "../config/database.js";
 
+
+export function CreateNewPost(req,res) {
+    // const {} = res.locals
+    console.log(res.sendStatus(201))
+    return res.sendStatus(201)
+
+}
+
 export async function editPost(req, res) {
     
     const currentSession = res.locals.session;
