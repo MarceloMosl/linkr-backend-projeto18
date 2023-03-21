@@ -102,9 +102,31 @@ CREATE TABLE public.posts (
 --
 
 CREATE TABLE public.posts_hashtags (
+    id integer NOT NULL,
     post_id integer NOT NULL,
-    hashtag_id integer NOT NULL
+    hashtag_id integer NOT NULL,
+    created_at timestamp without time zone DEFAULT now() NOT NULL
 );
+
+
+--
+-- Name: posts_hashtags_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.posts_hashtags_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: posts_hashtags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.posts_hashtags_id_seq OWNED BY public.posts_hashtags.id;
 
 
 --
@@ -215,6 +237,13 @@ ALTER TABLE ONLY public.posts ALTER COLUMN id SET DEFAULT nextval('public.posts_
 
 
 --
+-- Name: posts_hashtags id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.posts_hashtags ALTER COLUMN id SET DEFAULT nextval('public.posts_hashtags_id_seq'::regclass);
+
+
+--
 -- Name: sessions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -279,6 +308,13 @@ SELECT pg_catalog.setval('public.likes_id_seq', 1, false);
 
 
 --
+-- Name: posts_hashtags_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.posts_hashtags_id_seq', 1, false);
+
+
+--
 -- Name: posts_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
@@ -320,7 +356,7 @@ ALTER TABLE ONLY public.likes
 --
 
 ALTER TABLE ONLY public.posts_hashtags
-    ADD CONSTRAINT posts_hashtags_pkey PRIMARY KEY (post_id, hashtag_id);
+    ADD CONSTRAINT posts_hashtags_pkey PRIMARY KEY (id);
 
 
 --
