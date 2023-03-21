@@ -91,8 +91,8 @@ ALTER SEQUENCE public.likes_id_seq OWNED BY public.likes.id;
 CREATE TABLE public.posts (
     id integer NOT NULL,
     user_id integer NOT NULL,
-    headline text NOT NULL,
-    post_url text NOT NULL,
+    headline character varying(255),
+    post_url character varying(255) NOT NULL,
     created_at timestamp without time zone DEFAULT now() NOT NULL
 );
 

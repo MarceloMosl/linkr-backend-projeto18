@@ -1,13 +1,5 @@
 import { db } from "../config/database.js";
 
-
-export function CreateNewPost(req,res) {
-    // const {} = res.locals
-    console.log(res.sendStatus(201))
-    return res.sendStatus(201)
-
-}
-
 export async function editPost(req, res) {
     
     const currentSession = res.locals.session;
@@ -43,7 +35,6 @@ export async function deletePost(req, res) {
     const user = currentSession.rows[0].user_id;
 
     try{
-
         const chosenPost = await db.query(
             `SELECT * FROM posts WHERE "id" =$1`,
             [id]
@@ -59,6 +50,46 @@ export async function deletePost(req, res) {
         return res.status(500).send(err);
     }
 }
+
+export async function createPost(req, res) {
+    const currentSession = res.locals.session;
+    const user = currentSession.rows[0].user_id;
+    const { link, description } = req.body;
+
+    try {
+        const post = await db.query(
+            `INSERT INTO posts (user_id, headline, post_url) VALUES ($1, $2, $3) RETURNING *`,
+            [user, description ? description : null, link]
+        );
+
+        if (description && description.includes("#")) {
+            let hashtags = description.match(/#\w+/g);
+            hashtags.forEach(async (hashtag) => {
+
+                const tag = await db.query(
+                    `INSERT INTO hashtags (name, use_count) 
+                    VALUES ($1, 1) 
+                    ON CONFLICT (name) DO UPDATE 
+                    SET use_count = hashtags.use_count + 1 
+                    RETURNING id, name;`,
+                    [hashtag]
+                );
+
+                await db.query(
+                    `INSERT INTO posts_hashtags (hashtag_id, post_id) 
+                    VALUES ($1, $2)`,
+                    [tag.rows[0].id, post.rows[0].id]
+                );
+            });
+        }
+
+        return res.status(200).send(post.rows[0]);
+    } catch (err) {
+        return res.status(500).send(err);
+    }
+}
+
+
 
 
 
