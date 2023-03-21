@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 14.7 (Ubuntu 14.7-0ubuntu0.22.04.1)
--- Dumped by pg_dump version 14.7 (Ubuntu 14.7-0ubuntu0.22.04.1)
+-- Dumped from database version 12.14 (Ubuntu 12.14-0ubuntu0.20.04.1)
+-- Dumped by pg_dump version 12.14 (Ubuntu 12.14-0ubuntu0.20.04.1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -21,10 +21,10 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- Name: hastags; Type: TABLE; Schema: public; Owner: -
+-- Name: hashtags; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.hastags (
+CREATE TABLE public.hashtags (
     id integer NOT NULL,
     name text NOT NULL,
     use_count integer DEFAULT 0 NOT NULL,
@@ -33,10 +33,10 @@ CREATE TABLE public.hastags (
 
 
 --
--- Name: hastags_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: hashtags_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.hastags_id_seq
+CREATE SEQUENCE public.hashtags_id_seq
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -46,10 +46,10 @@ CREATE SEQUENCE public.hastags_id_seq
 
 
 --
--- Name: hastags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: hashtags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.hastags_id_seq OWNED BY public.hastags.id;
+ALTER SEQUENCE public.hashtags_id_seq OWNED BY public.hashtags.id;
 
 
 --
@@ -98,35 +98,13 @@ CREATE TABLE public.posts (
 
 
 --
--- Name: posts_hastags; Type: TABLE; Schema: public; Owner: -
+-- Name: posts_hashtags; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.posts_hastags (
-    id integer NOT NULL,
-    hastag_id integer NOT NULL,
+CREATE TABLE public.posts_hashtags (
     post_id integer NOT NULL,
-    created_at timestamp without time zone DEFAULT now() NOT NULL
+    hashtag_id integer NOT NULL
 );
-
-
---
--- Name: posts_hastags_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.posts_hastags_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: posts_hastags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.posts_hastags_id_seq OWNED BY public.posts_hastags.id;
 
 
 --
@@ -216,10 +194,10 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
--- Name: hastags id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: hashtags id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.hastags ALTER COLUMN id SET DEFAULT nextval('public.hastags_id_seq'::regclass);
+ALTER TABLE ONLY public.hashtags ALTER COLUMN id SET DEFAULT nextval('public.hashtags_id_seq'::regclass);
 
 
 --
@@ -237,13 +215,6 @@ ALTER TABLE ONLY public.posts ALTER COLUMN id SET DEFAULT nextval('public.posts_
 
 
 --
--- Name: posts_hastags id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.posts_hastags ALTER COLUMN id SET DEFAULT nextval('public.posts_hastags_id_seq'::regclass);
-
-
---
 -- Name: sessions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -258,7 +229,7 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 
 
 --
--- Data for Name: hastags; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: hashtags; Type: TABLE DATA; Schema: public; Owner: -
 --
 
 
@@ -276,7 +247,7 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 
 
 --
--- Data for Name: posts_hastags; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: posts_hashtags; Type: TABLE DATA; Schema: public; Owner: -
 --
 
 
@@ -294,10 +265,10 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 
 
 --
--- Name: hastags_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+-- Name: hashtags_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.hastags_id_seq', 1, false);
+SELECT pg_catalog.setval('public.hashtags_id_seq', 1, false);
 
 
 --
@@ -305,13 +276,6 @@ SELECT pg_catalog.setval('public.hastags_id_seq', 1, false);
 --
 
 SELECT pg_catalog.setval('public.likes_id_seq', 1, false);
-
-
---
--- Name: posts_hastags_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-SELECT pg_catalog.setval('public.posts_hastags_id_seq', 1, false);
 
 
 --
@@ -336,19 +300,11 @@ SELECT pg_catalog.setval('public.users_id_seq', 1, false);
 
 
 --
--- Name: hastags hastags_name_key; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: hashtags hashtags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.hastags
-    ADD CONSTRAINT hastags_name_key UNIQUE (name);
-
-
---
--- Name: hastags hastags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.hastags
-    ADD CONSTRAINT hastags_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.hashtags
+    ADD CONSTRAINT hashtags_pkey PRIMARY KEY (id);
 
 
 --
@@ -360,11 +316,11 @@ ALTER TABLE ONLY public.likes
 
 
 --
--- Name: posts_hastags posts_hastags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: posts_hashtags posts_hashtags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.posts_hastags
-    ADD CONSTRAINT posts_hastags_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.posts_hashtags
+    ADD CONSTRAINT posts_hashtags_pkey PRIMARY KEY (post_id, hashtag_id);
 
 
 --
@@ -381,6 +337,14 @@ ALTER TABLE ONLY public.posts
 
 ALTER TABLE ONLY public.sessions
     ADD CONSTRAINT sessions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: hashtags unique_hashtags_name; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.hashtags
+    ADD CONSTRAINT unique_hashtags_name UNIQUE (name);
 
 
 --
@@ -424,19 +388,19 @@ ALTER TABLE ONLY public.likes
 
 
 --
--- Name: posts_hastags posts_hastags_hastag_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: posts_hashtags posts_hashtags_hashtag_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.posts_hastags
-    ADD CONSTRAINT posts_hastags_hastag_id_fkey FOREIGN KEY (hastag_id) REFERENCES public.hastags(id);
+ALTER TABLE ONLY public.posts_hashtags
+    ADD CONSTRAINT posts_hashtags_hashtag_id_fkey FOREIGN KEY (hashtag_id) REFERENCES public.hashtags(id);
 
 
 --
--- Name: posts_hastags posts_hastags_post_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: posts_hashtags posts_hashtags_post_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.posts_hastags
-    ADD CONSTRAINT posts_hastags_post_id_fkey FOREIGN KEY (post_id) REFERENCES public.posts(id);
+ALTER TABLE ONLY public.posts_hashtags
+    ADD CONSTRAINT posts_hashtags_post_id_fkey FOREIGN KEY (post_id) REFERENCES public.posts(id);
 
 
 --
