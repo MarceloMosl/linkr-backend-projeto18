@@ -1,12 +1,13 @@
 import { db } from "../config/database.js";
+import urlMetadata from "url-metadata";
 
-export async function getPosts (req, res) {
-    const currentSession = res.locals.session;
-    const user = currentSession.rows[0].user_id;
+export async function getPosts(req, res) {
+	const currentSession = res.locals.session;
+	const user = currentSession.rows[0].user_id;
 
-    try{
-        
-        const promise = await db.query(`
+	try {
+		const posts = await db.query(
+			`
         SELECT
             p.id,
             p.user_id,
@@ -33,14 +34,22 @@ export async function getPosts (req, res) {
             u.id
         ORDER BY
             p.id DESC;
-    `, [user]);
-    
-      
+    `,
+			[user]
+		);
+		try {
+			for (const post of posts.rows) {
+				const meta = await urlMetadata(post.post_url);
+				post.title = meta.title;
+				post.image = meta.image;
+				post.description = meta.description;
+			}
+		} catch (err) {
+			res.status(500).send(err.message);
+		}
 
-        res.send(promise.rows.slice(0,20));
-
-    }catch(err){
-        res.status(500).send(err.message);
-    }
-    
-  };
+		res.send(posts.rows.slice(0, 20));
+	} catch (err) {
+		res.status(500).send(err.message);
+	}
+}
