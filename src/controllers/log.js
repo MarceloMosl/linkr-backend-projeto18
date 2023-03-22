@@ -39,7 +39,7 @@ async function login(req, res) {
     if (existe.rowCount === 0)
       return res.status(401).send("Email ou Senha incorreta!");
 
-    const { id, password: hash } = existe.rows[0];
+    const { id, password: hash, user_url } = existe.rows[0];
 
     const senhaCorreta = bcrypt.compareSync(password, hash);
 
@@ -65,7 +65,7 @@ async function login(req, res) {
         [id, token]
       );
     }
-    return res.status(200).send({ token });
+    return res.status(200).send({ token, user_url });
   } catch (err) {
     return res.status(500).send(err.message);
   }
