@@ -25,9 +25,9 @@ INNER JOIN
 LEFT JOIN
   likes l ON p.id = l.post_id
 LEFT JOIN
-  posts_hastags h ON p.id = h.post_id
+  posts_hashtags h ON p.id = h.post_id
 LEFT JOIN
-  hastags z ON z.id = h.hastag_id
+  hashtags z ON z.id = h.hashtag_id
 WHERE 
   u.id = ${id}
 GROUP BY
