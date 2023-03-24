@@ -71,4 +71,56 @@ async function login(req, res) {
   }
 }
 
-export { signUp, login };
+async function follow(req, res) {
+  const { id } = req.params
+  const currentSession = res.locals.session;
+  const token= currentSession.rows[0].token;
+
+  
+  const userSession= await db.query(`SELECT user_id FROM sessions WHERE token = $1;`, [
+    token
+  ]
+  );
+  
+  const user_id= userSession.rows[0].user_id;
+
+
+  try {
+    await db.query(`INSERT INTO friends (user_id, friend_id) VALUES ($1, $2)`, [user_id, id])
+
+    return res.sendStatus(200)
+
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(500);
+  }
+
+}
+
+async function unfollow (req, res){
+  const { id } = req.params
+  const currentSession = res.locals.session;
+  const token= currentSession.rows[0].token;
+
+  
+  const userSession= await db.query(`SELECT user_id FROM sessions WHERE token = $1;`, [
+    token
+  ]
+  );
+  
+  const user_id= userSession.rows[0].user_id;
+
+
+  try {
+    await db.query(`DELETE FROM friends WHERE user_id = $1 AND friend_id = $2`, [user_id, id])
+
+    return res.sendStatus(200)
+
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(500);
+  }
+
+}
+
+export { signUp, login, follow, unfollow };
