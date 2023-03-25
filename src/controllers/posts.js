@@ -24,17 +24,18 @@ export async function editPost(req, res) {
 		let newHashtags = headline.match(/#\w+/g);
 		if (newHashtags === null) newHashtags = [];
 
-		const addedHashtags = newHashtags.filter(
-			(hashtag) => !oldHashtags.includes(hashtag)
-		);
-		const removedHashtags = oldHashtags.filter(
-			(hashtag) => !newHashtags.includes(hashtag)
-		);
+		const addedHashtags = newHashtags
+			.filter(hashtag => !oldHashtags.includes(hashtag))
+			.map(hashtag => hashtag.substring(1)); 
+
+		const removedHashtags = oldHashtags
+			.filter(hashtag => !newHashtags.includes(hashtag))
+			.map(hashtag => hashtag.substring(1)); 
 
 		if (addedHashtags.length > 0) {
 			addedHashtags.forEach(async (hashtag) => {
 				const added = await db.query(
-					`INSERT INTO hashtags (name, use_count) 
+				`INSERT INTO hashtags (name, use_count) 
                 VALUES ($1, 1) 
                 ON CONFLICT (name) DO UPDATE 
                 SET use_count = hashtags.use_count + 1 

@@ -8,7 +8,7 @@ export async function showHashTags(req,res) {
         const hashtags = await db.query(
             `SELECT *
             FROM hashtags
-            WHERE use_count => 0
+            WHERE use_count > 0
             ORDER BY use_count DESC LIMIT 10;`
         );
         
