@@ -120,13 +120,14 @@ export async function createPost(req, res) {
 		if (description && description.includes("#")) {
 			let hashtags = description.match(/#\w+/g);
 			hashtags.forEach(async (hashtag) => {
+				console.log(hashtag.substring(1))
 				const tag = await db.query(
 					`INSERT INTO hashtags (name, use_count) 
                     VALUES ($1, 1) 
                     ON CONFLICT (name) DO UPDATE 
                     SET use_count = hashtags.use_count + 1 
                     RETURNING id, name;`,
-					[hashtag]
+					[hashtag.substring(1)]
 				);
 
 				await db.query(
