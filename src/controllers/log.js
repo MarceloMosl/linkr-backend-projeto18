@@ -65,7 +65,7 @@ async function login(req, res) {
         [id, token]
       );
     }
-    return res.status(200).send({ token, user_url });
+    return res.status(200).send({id, token, user_url });
   } catch (err) {
     return res.status(500).send(err.message);
   }
@@ -123,4 +123,35 @@ async function unfollow (req, res){
 
 }
 
-export { signUp, login, follow, unfollow };
+async function followed(req, res) {
+  const currentSession = res.locals.session;
+  const token = currentSession.rows[0].token;
+  const { id } = req.params
+
+
+  const user = await db.query(
+    `SELECT user_id FROM users JOIN sessions ON user_id= sessions.user_id WHERE sessions.token= $1`,
+    [token]
+  );
+
+  try {
+    const user_id = user.rows[0].user_id;
+
+
+    const result = await db.query(`SELECT * FROM friends WHERE user_id = $1 AND friend_id = $2`, 
+      [user_id, id]
+    );
+
+    return res.status(200).send(result.rows[0])
+    } catch (error) {
+        console.log(error);
+        return res.sendStatus(500);
+    }
+}
+
+
+
+
+
+
+export { signUp, login, follow, unfollow, followed };
